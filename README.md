@@ -1,4 +1,8 @@
-# OOP Template
+#Descriere proiect
+
+Casa de discuri "Jordan Records" //to add
+
+#OOP Template
 
 ### Tema 0
 
