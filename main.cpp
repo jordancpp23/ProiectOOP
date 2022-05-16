@@ -1,6 +1,8 @@
 #include <iostream>
+#include <fstream>
 #include <vector>
 #include <string>
+#include <map>
 
 class Artist {
     std::string nume;
@@ -44,58 +46,9 @@ class Artist_Solo : Artist{
     //todo t2
 };
 
-class Durata{ //auxiliara, destul de hacky dar pare ca merge
-    double minute, secunde;
-public:
-    Durata(double formaInitiala = 0.0, double minute_ = 0, double secunde_ = 0) :  minute(minute_),
-                                                            secunde(secunde_) {
-        minute = (int)formaInitiala;
-        secunde = (int)100 * (formaInitiala - (int)formaInitiala);
-    }
-    friend Durata& operator+(Durata d1, Durata d2)
-    {
-        Durata *res = new Durata;
-        res -> minute = (int)(d1.minute + d2.minute);
-        res->secunde = d1.secunde + d2.secunde;
-        if (res->secunde >= 60)
-        {
-            res->minute++;
-            res->secunde -= 60;
-        }
-        res->secunde = (int) res->secunde;
-        return *res;
-    }
-    friend Durata& operator-(Durata d1, Durata d2)
-    {
-        Durata *res = new Durata;
-        res -> minute = (int)(d1.minute - d2.minute);
-        res->secunde = d1.secunde - d2.secunde;
-        if (res->secunde < 0)
-        {
-            res->minute--;
-            res->secunde += 61;
-        }
-        res->secunde = (int) res->secunde;
-        return *res;
-    }
-    friend std::istream &operator >>(std::istream &is, Durata &durata)
-    {
-        double formaInitiala;
-        is >> formaInitiala;
-        durata.minute = (int)formaInitiala;
-        durata.secunde = (int)100 * (formaInitiala - (int)formaInitiala);
-        return is;
-    }
-    friend std::ostream &operator<<(std::ostream &os, const Durata &durata) {
-        os << durata.minute << " minute si " << durata.secunde << " secunde\n";
-        return os;
-    }
-
-};
-
 class Piesa{
     std::string nume;
-    Durata durata;
+    double durata;
 public:
     Piesa(const std::string &nume_ = "Nameless song", double durata_ = 0) : nume(nume_), durata(durata_) {}
     friend std::istream& operator >> (std::istream &is, Piesa &p)
@@ -107,14 +60,14 @@ public:
     friend std::ostream& operator << (std::ostream &os, const Piesa& p)
     {
         os << "Numele piesei: " << p.nume << ", Durata piesei: ";
-        os << p.durata;
+        os << (int)p.durata << " minute si " << (int) 100 * (p.durata - (int)p.durata) << " secunde\n";
         return os;
     }
     const std::string& GetNume() const
     {
         return nume;
     }
-    Durata GetDurata() const
+    double GetDurata() const
     {
         return durata;
     }
@@ -123,24 +76,37 @@ public:
 
 class Album{
     std::string nume;
-    Durata durata;
+    double durata;
     std::vector <Piesa> tracks;
 public:
-    Album(const std::string &nume_ = "Untitled Unmastered", const std::vector<Piesa> &tracks_ = {}, double durata_ = 0)
-    : nume(nume_), durata(durata_), tracks(tracks_) {
+    Album(const std::string &nume_ = "Untitled Unmastered", const std::vector<Piesa> &tracks_ = {}, double durata_ = 0) : nume(nume_), durata(durata_),
+                                                                                      tracks(tracks_) {
         for (auto &piesa : tracks)
-            durata = durata + piesa.GetDurata();
+            durata = AdunaDurate(durata, piesa.GetDurata());
+    }
+    double AdunaDurate(double x, double y) // nu prea ii e locul aici dar nu prea am unde altundeva sa o bag
+    {
+        double s1 = 100 * (x - (int) x);
+        double s2 = 100 * (y - (int) y);
+        if (s1 + s2 - 60 <= 1e-9) // improvizatie pt floating point
+        {
+            x = 1.0 * ((int)x + (int)y);
+            x++;
+            x += (s1 + s2 - 60) / 100;
+        }
+        else x += y;
+        return x;
     }
 
     void AdaugaPiesa(const Piesa &p)
     {
         tracks.push_back(p);
-        durata = durata + p.GetDurata();
+        durata = AdunaDurate(durata, p.GetDurata());
     }
 
     friend std::ostream &operator<<(std::ostream &os, const Album &album) {
         os << "Numele albumului: " << album.nume << "\n";
-        os << "Durata albumului: " << album.durata;
+        os << "Durata albumului: " << (int)album.durata << " minute si " << 100 * (album.durata - (int)album.durata) << " secunde\n";
         os << "Tracklist:\n";
         for (size_t i = 0; i < album.tracks.size(); i++)
             os << (i + 1) << ". " << album.tracks[i];
@@ -178,7 +144,6 @@ int main() {
     temp.push_back(p3);
     temp.push_back(p4);
     Album m1("Master of Puppets", temp);
-    m1.AdaugaPiesa({"Breadfan", 3.2});
     std::cout << m1;
     return 0;
 }
