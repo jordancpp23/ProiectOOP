@@ -119,7 +119,7 @@ public:
 
     void ScoatePiesa(const Piesa &p)
     {
-        unsigned pos = 2e9;
+        unsigned pos = 2000000000;
         for (unsigned i = 0; i < tracks.size(); i++)
             if (tracks[i].GetNume() == p.GetNume())
                 pos = i;
@@ -194,11 +194,11 @@ public:
           const std::vector<Concert> &concerte_ = {}, const std::vector<Artist> &membri_ = {}) : nume(nume_), genre(genre_),
             an_infiintare(an), discografie(discografie_), concerte(concerte_), membri(membri_) {}
 
-    void AdaugaAlbum(Album &album)
+    void AdaugaAlbum(const Album &album)
     {
         discografie.insert(album);
     }
-    void ProgrameazaConcert(Concert &concert)
+    void ProgrameazaConcert(const Concert &concert)
     {
         for (auto &c : concerte)
             if (c.nume == concert.nume)
@@ -213,13 +213,13 @@ public:
             }
         concerte.push_back(concert);
     }
-    void AdaugaMembru(Artist &artist)
+    void AdaugaMembru(const Artist &artist)
     {
         membri.push_back(artist);
     }
-    void StergeMembru(Artist &artist)
+    void StergeMembru(const Artist &artist)
     {
-        unsigned pos = 2e9;
+        unsigned pos = 2000000000;
         for (unsigned i = 0; i < membri.size(); i++)
             if (membri[i].nume == artist.nume)
                 pos = i;
