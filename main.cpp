@@ -3,6 +3,7 @@
 #include <string>
 #include <set>
 
+
 class Artist {
     std::string nume;
     std::string instr;
@@ -20,10 +21,10 @@ public:
         this -> varsta = other.varsta;
         return *this;
     }
-    /*const std::string& GetNume() const
+    [[nodiscard]] const std::string& GetNume() const
     {
         return nume;
-    }*/
+    }
     friend std::istream& operator >> (std::istream &is, Artist &art)
     {
         getline(is, art.nume);
@@ -111,31 +112,42 @@ public:
         else x -= y;
         return x;
     }
+    bool VerificaPiesa(const Piesa &p) const
+    {
+        for (auto &piesa : tracks)
+            if (piesa.GetNume() == p.GetNume())
+                return true;
+        return false;
+    }
     void AdaugaPiesa(const Piesa &p)
     {
+        if (VerificaPiesa(p)) {
+                std::cout << "Piesa " << p.GetNume() << "se afla deja pe albumul " << nume << "!\n";
+                return;
+            }
         tracks.push_back(p);
         durata = AdunaDurate(durata, p.GetDurata());
     }
 
     void ScoatePiesa(const Piesa &p)
     {
-        unsigned pos = 2000000000;
+        unsigned pos = 2'000'000'000;
         for (unsigned i = 0; i < tracks.size(); i++)
             if (tracks[i].GetNume() == p.GetNume())
                 pos = i;
-        if (pos == 2e9)
+        if (pos == 2e9) /// to add exception
         {
-            std::cout << "Piesa " << p.GetNume() << " nu se afla pe album!\n";
+            std::cout << "Piesa " << p.GetNume() << " nu se afla pe albumul " << nume << "!\n";
             return;
         }
         tracks.erase(tracks.begin() + pos);
         durata = ScadeDurate(durata, p.GetDurata());
     }
-    /*const std::string& GetNume() const
+    const std::string& GetNume() const
     {
         return nume;
     }
-    double GetDurata() const
+    /*double GetDurata() const
     {
         return durata;
     }*/
@@ -156,28 +168,63 @@ public:
     ~Album() = default;
 };
 
+class Data{
+    int zi, luna, an;
+public:
+    Data(int zi_ = 30, int luna_ = 02, int an_ = 1900) : zi(zi_), luna(luna_), an(an_) {}
+    friend std::istream& operator >> (std::istream &is, Data &d)
+    {
+        is >> d.zi >> d.luna >> d.an;
+        return is;
+    }
+    friend std::ostream& operator << (std::ostream &os, const Data& d)
+    {
+        os << d.zi << "." << d.luna << "." << d.an << "\n";
+        return os;
+    }
+    bool operator < (const Data &other) const {
+        if (an < other.an) return true;
+        if (an == other.an) {
+            if (luna < other.luna) return true;
+            if (luna == other.luna)
+                if (zi < other.zi) return true;
+        }
+        return false;
+    }
+    bool operator == (const Data &other) const {
+        return zi == other.zi && luna == other.luna && an == other.an;
+    }
+    ~Data() = default;
+};
+
 class Concert{
     std::string locatie;
-    std::string data;
+    Data data;
     std::string nume;
 public:
-    Concert(const std::string &locatie_ = "Neanuntat", const std::string &data_ = "29 Februarie",
-            const std::string &nume_ = "nu stiu") :
-                locatie(locatie_), data(data_), nume{nume_}{}
+explicit Concert(const std::string &locatie_ = "Unknown", const Data &data_ = Data(), const std::string &nume_ = "Untitled") : locatie(locatie_), data(data_), nume(nume_) {}
+    friend std::istream& operator >> (std::istream &is, Concert &c)
+    {
+        is >> c.locatie >> c.data >> c.nume;
+        return is;
+    }
+    friend std::ostream& operator << (std::ostream &os, const Concert& c)
+    {
+        os << "Numele concertului: " << c.nume << "\n";
+        os << "Locatia concertului: " << c.locatie << "\n";
+        os << "Data concertului: " << c.data;
+        return os;
+    }
+    bool operator < (const Concert &other) const {
+        return data < other.data;
+    }
+    ~Concert() = default;
+
 
    /* const std::string& getLocatie() const {
         return locatie;
-    }
-
-    const std::string& getData() const {
-        return data;
     }*/
 
-    friend std::ostream &operator<<(std::ostream &os, const Concert &concert){
-        os << "Concertul " << concert.nume << " are loc in " << concert.locatie <<
-            " la data de " << concert.data << "\n";
-        return os;
-    }
 
     friend class Trupa;
 };
@@ -187,23 +234,32 @@ class Trupa {
     std::string genre;
     int an_infiintare;
     std::set <Album> discografie;
-    std::vector <Concert> concerte;
+    std::set <Concert> concerte;
     std::vector <Artist> membri;
 public:
     Trupa(const std::string &nume_ = "Placeholder", const std::string &genre_ = "Pop", const int an = 0, const std::set<Album> &discografie_ = {},
-          const std::vector<Concert> &concerte_ = {}, const std::vector<Artist> &membri_ = {}) : nume(nume_), genre(genre_),
+          const std::set<Concert> &concerte_ = {}, const std::vector<Artist> &membri_ = {}) : nume(nume_), genre(genre_),
             an_infiintare(an), discografie(discografie_), concerte(concerte_), membri(membri_) {}
 
     void AdaugaAlbum(const Album &album)
     {
-        discografie.insert(album);
+        if(discografie.find(album) != discografie.end())
+            std::cout << "Albumul " << album.GetNume() << " se afla deja in discografie!\n";
+        else
+            discografie.insert(album);
+    }
+    [[nodiscard]] bool CautaPiesa(const Piesa &p) const
+    {
+        for (auto &a : discografie)
+            if (a.VerificaPiesa(p))
+                return true;
+        return false;
     }
     void ProgrameazaConcert(const Concert &concert)
     {
         for (auto &c : concerte)
-            if (c.nume == concert.nume)
-            {
-                std::cout << "Concertul este deja programat!\n";
+            if (c.nume == concert.nume && c.data == concert.data) {
+                std::cout << "Concertul " << concert.nume << "la data de " << c.data << " este deja programat!\n";
                 return;
             }
             else if (c.data == concert.data)
@@ -211,15 +267,20 @@ public:
                 std::cout << "Trupa are un alt concert programat pe aceeasi data!\n";
                 return;
             }
-        concerte.push_back(concert);
+        concerte.insert(concert);
     }
     void AdaugaMembru(const Artist &artist)
     {
+        for (auto &a : membri)
+            if (a.GetNume() == artist.GetNume()) {
+                std::cout << "Artistul " << artist.GetNume() << " se afla deja in trupa!\n";
+                return;
+            }
         membri.push_back(artist);
     }
     void StergeMembru(const Artist &artist)
     {
-        unsigned pos = 2000000000;
+        unsigned pos = 2'000'000'000;
         for (unsigned i = 0; i < membri.size(); i++)
             if (membri[i].nume == artist.nume)
                 pos = i;
@@ -244,10 +305,41 @@ public:
         for (auto &mem : membri)
             os << mem;
     }
+    [[nodiscard]] bool IsSimilar(const Trupa &other) const
+    {
+        //2 trupe sunt similare daca au acelasi genre, cel putin un membru comun sau daca participa ambele la un concert
+        if (genre == other.genre)
+            return true;
+        for (auto &mem : membri)
+            for (auto &other_mem : other.membri)
+                if (mem.GetNume() == other_mem.GetNume())
+                    return true;
+        for (auto &c : concerte)
+            if (other.concerte.find(c) != other.concerte.end())
+                return true;
+        return false;
+    }
+    void CheckSimilarity(const Trupa &other) const
+    {
+        if (IsSimilar(other))
+            std::cout << "Trupa " << nume << " este similara cu trupa " << other.nume << "\n";
+        else
+            std::cout << "Trupa " << nume << " nu este similara cu trupa " << other.nume << "\n";
+    }
+    void AfisConcerte (std::ostream &os) const
+    {
+        os << "Concertele programate ale trupei " << nume << " sunt: \n";
+        for (auto &conc : concerte)
+            os << conc << "\n";
+    }
+    void AfisDetalii (std::ostream &os) const
+    {
+        os << "Numele trupei: " << nume << ", Anul infiintarii: " << an_infiintare << ", Genul muzical: "
+           << genre << "\n\n";
+    }
     friend std::ostream& operator<< (std::ostream &os, const Trupa& band)
     {
-        os << "Numele trupei: " << band.nume << ", Anul infiintarii: " << band.an_infiintare << ", Genul muzical: "
-                << band.genre << "\n\n";
+        band.AfisDetalii(os);
         band.AfisMembri(os);
         os << "\n";
         band.AfisAlbume(os);
@@ -261,7 +353,7 @@ int main() {
     Piesa p1{"Master of Puppets", 7.20};
     Piesa p2{"Disposable Heroes", 5.30};
     Piesa p3{"Damage Inc.", 3.50};
-    Piesa p4{"bonus track : Blitzkrieg", 3.2};
+    Piesa p4{"bonus track : Blitzkrieg", 3.2}; // va fi clasa mostenita
     std::vector<Piesa> temp = {p1, p2, p3, p4};
     Album m1{"Master of Puppets", temp, 0, 1986};
     m1.AdaugaPiesa({"Breadfan", 3.5});
@@ -284,8 +376,24 @@ int main() {
     t1.AdaugaAlbum(m2);
     t1.AdaugaMembru(a5);
     t1.StergeMembru(a5);
-    Concert c1{"Bucuresti", "23 mai 2022", "Rock in Giulesti"};
+    Concert c1{"Bucuresti", {23, 5, 2022}, "Rock in Giulesti"};
     t1.ProgrameazaConcert(c1);
     std::cout << t1;
+    t1.AfisConcerte(std::cout);
+    Piesa p5{"Holy Wars...The Punishment Due", 6.36};
+    Piesa p6{"Take No Prisoners", 3.28};
+    Piesa p7{"Hangar 18", 5.14};
+    Piesa p8{"Five Magics", 5.41};
+    temp = {p5, p6, p7, p8};
+    Album m3{"Rust In Peace", temp, 0, 1990};
+    Artist a6{"Dave Mustaine", "Chitara ritmica", 59};
+    Artist a7{"Dirk Verbeuren", "Tobe", 35};
+    Artist a8{"James Lomenzo", "Chitara bass", 48};
+    Artist a9{"Kiko Loureiro", "Chitara lead", 41};
+    Trupa t2{"Megadeth", "Thrash Metal", 1983, {m3}, {}, {a6, a7, a8, a9}};
+    t1.CheckSimilarity(t2);
+    if (t2.CautaPiesa(p1))
+        std::cout << "Trupa a scris piesa!\n";
+    else std::cout << "Wrong band / wrong song!\n";
     return 0;
 }
