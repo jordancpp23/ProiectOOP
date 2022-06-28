@@ -39,7 +39,6 @@ public:
         return os;
     }
     ~Artist() = default;
-    friend class Trupa;
 };
 
 class Artist_Solo : Artist{
@@ -215,6 +214,13 @@ explicit Concert(const std::string &locatie_ = "Unknown", const Data &data_ = Da
         os << "Data concertului: " << c.data;
         return os;
     }
+    const std::string& GetNume() const
+    {
+        return nume;
+    }
+    const Data & GetData() const {
+        return data;
+    }
     bool operator < (const Concert &other) const {
         return data < other.data;
     }
@@ -225,8 +231,6 @@ explicit Concert(const std::string &locatie_ = "Unknown", const Data &data_ = Da
         return locatie;
     }*/
 
-
-    friend class Trupa;
 };
 
 class Trupa {
@@ -258,11 +262,11 @@ public:
     void ProgrameazaConcert(const Concert &concert)
     {
         for (auto &c : concerte)
-            if (c.nume == concert.nume && c.data == concert.data) {
-                std::cout << "Concertul " << concert.nume << "la data de " << c.data << " este deja programat!\n";
+            if (c.GetNume() == concert.GetNume() && c.GetData() == concert.GetData()) {
+                std::cout << "Concertul " << concert.GetNume() << "la data de " << c.GetData() << " este deja programat!\n";
                 return;
             }
-            else if (c.data == concert.data)
+            else if (c.GetData() == concert.GetData())
             {
                 std::cout << "Trupa are un alt concert programat pe aceeasi data!\n";
                 return;
@@ -282,11 +286,11 @@ public:
     {
         unsigned pos = 2'000'000'000;
         for (unsigned i = 0; i < membri.size(); i++)
-            if (membri[i].nume == artist.nume)
+            if (membri[i].GetNume() == artist.GetNume())
                 pos = i;
         if (pos == 2e9)
         {
-            std::cout << "Artistul " << artist.nume << " nu face parte din trupa!\n";
+            std::cout << "Artistul " << artist.GetNume() << " nu face parte din trupa!\n";
             return;
         }
         membri.erase(membri.begin() + pos);
