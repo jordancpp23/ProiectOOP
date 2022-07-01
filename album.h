@@ -5,16 +5,19 @@
 #ifndef OOP_ALBUM_H
 #define OOP_ALBUM_H
 #include <string>
+#include <memory>
 #include "piesa.h"
 #include <vector>
 
 class Album{
+
+    std::vector <std::shared_ptr<Piesa>> tracks;
     std::string nume;
     double durata;
-    std::vector <Piesa> tracks;
     int an_aparitie;
 public:
-    explicit Album(const std::string &nume_ = "Untitled Unmastered", const std::vector<Piesa> &tracks_ = {}, double durata_ = 0, int an = 0);
+    Album(std::vector<std::shared_ptr<Piesa>>& tracks_, const std::string &nume_ = "Nameless album", const double durata_ = 0,
+                   const int an_aparitie_ = 0);
 
     double AdunaDurate(double x, double y);
 

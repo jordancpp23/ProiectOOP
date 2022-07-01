@@ -7,6 +7,9 @@
 Trupa::Trupa(const std::string &nume_, const std::string &genre_, const int an, const std::set<Album> &discografie_,
              const std::set<Concert> &concerte_, const std::vector<Artist> &membri_) : nume(nume_), genre(genre_),
                                                                                        an_infiintare(an), discografie(discografie_), concerte(concerte_), membri(membri_) {}
+const std::string &Trupa::GetNume() const {
+    return nume;
+}
 
 void Trupa::AdaugaAlbum(const Album &album) {
     if(discografie.find(album) != discografie.end())
@@ -111,3 +114,4 @@ std::ostream &operator<<(std::ostream &os, const Trupa &band) {
     band.AfisAlbume(os);
     return os;
 }
+

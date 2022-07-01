@@ -4,10 +4,13 @@
 
 #include "album.h"
 
-Album::Album(const std::string &nume_, const std::vector<Piesa> &tracks_, double durata_, int an) : nume(nume_), durata(durata_),
-                                                                                                    tracks(tracks_), an_aparitie(an) {
-    for (auto &piesa : tracks)
-        durata = AdunaDurate(durata, piesa.GetDurata());
+
+Album::Album(std::vector<std::shared_ptr<Piesa>> &tracks_, const std::string &nume_, const double durata_,
+             const int an_aparitie_) : tracks(std::move(tracks_)), nume(nume_), durata(durata_), an_aparitie(an_aparitie_) {
+    durata = 0;
+    for (const auto &piesa : tracks) {
+        durata = AdunaDurate(durata, piesa->GetDurata());
+    }
 }
 
 double Album::AdunaDurate(double x, double y) // nu prea ii e locul aici dar nu prea am unde altundeva sa o bag
@@ -39,8 +42,8 @@ double Album::ScadeDurate(double x, double y) {
 }
 
 bool Album::VerificaPiesa(const Piesa &p) const {
-    for (auto &piesa : tracks)
-        if (piesa.GetNume() == p.GetNume())
+    for (const auto &piesa : tracks)
+        if (piesa -> GetNume() == p.GetNume())
             return true;
     return false;
 }
@@ -50,16 +53,16 @@ void Album::AdaugaPiesa(const Piesa &p) {
         std::cout << "Piesa " << p.GetNume() << "se afla deja pe albumul " << nume << "!\n";
         return;
     }
-    tracks.push_back(p);
+    tracks.emplace_back(p.clone());
     durata = AdunaDurate(durata, p.GetDurata());
 }
 
 void Album::ScoatePiesa(const Piesa &p) {
     unsigned pos = 2'000'000'000;
     for (unsigned i = 0; i < tracks.size(); i++)
-        if (tracks[i].GetNume() == p.GetNume())
+        if (tracks[i]->GetNume() == p.GetNume())
             pos = i;
-    if (pos == 2e9) /// to add exception
+    if (pos == 2e9)
     {
         std::cout << "Piesa " << p.GetNume() << " nu se afla pe albumul " << nume << "!\n";
         return;
@@ -77,7 +80,7 @@ std::ostream &operator<<(std::ostream &os, const Album &album) {
     os << "Durata albumului: " << (int)album.durata << " minute si " << 100 * (album.durata - (int)album.durata) << " secunde\n";
     os << "Tracklist:\n";
     for (unsigned i = 0; i < album.tracks.size(); i++)
-        os << (i + 1) << ". " << album.tracks[i];
+        os << (i + 1) << ". " << *album.tracks[i];
     std::cout << "\n\n";
     return os;
 }
@@ -85,3 +88,4 @@ std::ostream &operator<<(std::ostream &os, const Album &album) {
 bool Album::operator<(const Album &other) const {
     return an_aparitie < other.an_aparitie;
 }
+

@@ -24,7 +24,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 ###############################################################################
 
 # NOTE: update executable name in .github/workflows/cmake.yml when changing name here
-add_executable(${PROJECT_NAME} main.cpp artist.h artist.cpp piesa.cpp piesa.h album.cpp album.h data.cpp data.h concert.cpp concert.h trupa.cpp trupa.h)
+add_executable(${PROJECT_NAME} main.cpp artist.h artist.cpp piesa.cpp piesa.h album.cpp album.h data.cpp data.h concert.cpp concert.h trupa.cpp trupa.h single.cpp single.h cover.cpp cover.h)
 
 ###############################################################################
 

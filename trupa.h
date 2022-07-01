@@ -23,6 +23,12 @@ public:
     Trupa(const std::string &nume_ = "Placeholder", const std::string &genre_ = "Pop", const int an = 0, const std::set<Album> &discografie_ = {},
           const std::set<Concert> &concerte_ = {}, const std::vector<Artist> &membri_ = {});
 
+    const std::string& GetNume() const;
+
+    void SetNume(const std::string &nume_) {
+        nume = nume_;
+    }
+
     void AdaugaAlbum(const Album &album);
 
     [[nodiscard]] bool CautaPiesa(const Piesa &p) const;

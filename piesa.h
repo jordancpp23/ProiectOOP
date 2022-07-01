@@ -6,12 +6,16 @@
 #define OOP_PIESA_H
 #include <string>
 #include <iostream>
+#include <memory>
 
 class Piesa{
+protected:
     std::string nume;
     double durata;
 public:
-    Piesa(const std::string &nume_ = "Nameless song", double durata_ = 0);
+    Piesa(const std::string &nume_ = "Nameless song", const double durata_ = 0);
+
+    virtual void AfisarePiesa(std::ostream &os) const;
 
     friend std::istream& operator >> (std::istream &is, Piesa &p);
 
@@ -21,7 +25,8 @@ public:
 
     double GetDurata() const;
 
-    ~Piesa() = default;
+    [[maybe_unused]] [[nodiscard]] virtual std::shared_ptr<Piesa> clone() const;
+    virtual ~Piesa() = default;
 };
 
 

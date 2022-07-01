@@ -12,10 +12,18 @@ std::istream &operator>>(std::istream &is, Piesa &p) {
     return is;
 }
 
+void Piesa::AfisarePiesa(std::ostream &os) const {
+    os << "Numele piesei: " << nume << ", Durata piesei: ";
+    os << (int)durata << " minute si " << (int) 100 * (durata - (int)durata) << " secunde\n";
+}
+
 std::ostream &operator<<(std::ostream &os, const Piesa &p) {
-    os << "Numele piesei: " << p.nume << ", Durata piesei: ";
-    os << (int)p.durata << " minute si " << (int) 100 * (p.durata - (int)p.durata) << " secunde\n";
+    p.AfisarePiesa(os);
     return os;
+}
+
+[[maybe_unused]] std::shared_ptr<Piesa> Piesa::clone() const{
+    return std::make_shared<Piesa>(*this);
 }
 
 const std::string &Piesa::GetNume() const {
