@@ -3,16 +3,48 @@
 //
 
 #include "album.h"
-
+#include "single.h"
+#include "exceptii.h"
 
 Album::Album(std::vector<std::shared_ptr<Piesa>> &tracks_, const std::string &nume_, const double durata_,
              const int an_aparitie_) : tracks(std::move(tracks_)), nume(nume_), durata(durata_), an_aparitie(an_aparitie_) {
+    for (const auto& single :tracks) {
+        if (std::dynamic_pointer_cast<Single>(single)) {
+            //std::cout << std::dynamic_pointer_cast<Single>(single)->GetDataLansare().getAn() << " " << an_aparitie << "\n";
+            if (std::dynamic_pointer_cast<Single>(single)->GetDataLansare().getAn() > an_aparitie) {
+                //std::cout << nume << "\n";
+                throw eroare_album("Single-ul nu poate fi lansat dupa album!");
+            }
+        }
+    }
     durata = 0;
     for (const auto &piesa : tracks) {
         durata = AdunaDurate(durata, piesa->GetDurata());
     }
 }
 
+Album::Album(const Album &other) {
+    nume = other.nume;
+    durata = other.durata;
+    an_aparitie = other.an_aparitie;
+    for (const auto &piesa : other.tracks) {
+        tracks.push_back(piesa->clone());
+    }
+}
+
+void swap(Album &a1, Album &a2) {
+    using std::swap;
+    swap(a1.nume, a2.nume);
+    swap(a1.durata, a2.durata);
+    swap(a1.an_aparitie, a2.an_aparitie);
+    swap(a1.tracks, a2.tracks);
+}
+
+Album& Album::operator=(const Album &other) {
+    auto temp{other};
+    swap(temp, *this);
+    return *this;
+}
 double Album::AdunaDurate(double x, double y) // nu prea ii e locul aici dar nu prea am unde altundeva sa o bag
 {
     double s1 = 100 * (x - (int) x);
@@ -75,6 +107,10 @@ const std::string &Album::GetNume() const {
     return nume;
 }
 
+int Album::getAnAparitie() const {
+    return an_aparitie;
+}
+
 std::ostream &operator<<(std::ostream &os, const Album &album) {
     os << "Numele albumului: " << album.nume << "\n";
     os << "Durata albumului: " << (int)album.durata << " minute si " << 100 * (album.durata - (int)album.durata) << " secunde\n";
@@ -88,4 +124,5 @@ std::ostream &operator<<(std::ostream &os, const Album &album) {
 bool Album::operator<(const Album &other) const {
     return an_aparitie < other.an_aparitie;
 }
+
 

@@ -6,6 +6,10 @@
 
 Data::Data(int zi_, int luna_, int an_) : zi(zi_), luna(luna_), an(an_) {}
 
+int Data::getAn() const {
+    return an;
+}
+
 std::istream &operator>>(std::istream &is, Data &d) {
     is >> d.zi >> d.luna >> d.an;
     return is;
@@ -29,3 +33,5 @@ bool Data::operator<(const Data &other) const {
 bool Data::operator==(const Data &other) const {
     return zi == other.zi && luna == other.luna && an == other.an;
 }
+
+

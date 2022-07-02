@@ -3,10 +3,17 @@
 //
 
 #include "trupa.h"
+#include "exceptii.h"
 
 Trupa::Trupa(const std::string &nume_, const std::string &genre_, const int an, const std::set<Album> &discografie_,
              const std::set<Concert> &concerte_, const std::vector<Artist> &membri_) : nume(nume_), genre(genre_),
-                                                                                       an_infiintare(an), discografie(discografie_), concerte(concerte_), membri(membri_) {}
+             an_infiintare(an), discografie(discografie_), concerte(concerte_), membri(membri_) {
+    id_max++;
+    id = id_max;
+    for (auto &album : discografie)
+        if (album.getAnAparitie() < an_infiintare)
+            throw eroare_trupa("Trupa nu poate scoate un album inainte sa se infiinteze!");
+}
 const std::string &Trupa::GetNume() const {
     return nume;
 }
@@ -103,7 +110,7 @@ void Trupa::AfisConcerte(std::ostream &os) const {
 }
 
 void Trupa::AfisDetalii(std::ostream &os) const {
-    os << "Numele trupei: " << nume << ", Anul infiintarii: " << an_infiintare << ", Genul muzical: "
+    os << "Id-ul trupei: " << id << ", Numele trupei: " << nume << ", Anul infiintarii: " << an_infiintare << ", Genul muzical: "
        << genre << "\n\n";
 }
 
@@ -115,3 +122,4 @@ std::ostream &operator<<(std::ostream &os, const Trupa &band) {
     return os;
 }
 
+int Trupa::id_max = 0;

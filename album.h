@@ -19,9 +19,17 @@ public:
     Album(std::vector<std::shared_ptr<Piesa>>& tracks_, const std::string &nume_ = "Nameless album", const double durata_ = 0,
                    const int an_aparitie_ = 0);
 
+    Album (const Album& other);
+
+    friend void swap(Album& a1, Album& a2);
+
+    Album& operator = (const Album& other);
+
     double AdunaDurate(double x, double y);
 
     double ScadeDurate(double x, double y);
+
+    int getAnAparitie() const;
 
     bool VerificaPiesa(const Piesa &p) const;
 

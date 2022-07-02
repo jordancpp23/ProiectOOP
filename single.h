@@ -16,7 +16,10 @@ public:
 
     void AfisarePiesa(std::ostream &os) const override;
 
-    int GetVizualizari() const;
+    [[maybe_unused]]int GetVizualizari() const;
+
+    const Data& GetDataLansare() const;
+
 
     friend std::ostream& operator << (std::ostream &os, const Single &single);
 

@@ -13,9 +13,11 @@
 #include "concert.h"
 
 class Trupa {
+    static int id_max;
     std::string nume;
     std::string genre;
     int an_infiintare;
+    int id;
     std::set <Album> discografie;
     std::set <Concert> concerte;
     std::vector <Artist> membri;
@@ -24,10 +26,6 @@ public:
           const std::set<Concert> &concerte_ = {}, const std::vector<Artist> &membri_ = {});
 
     const std::string& GetNume() const;
-
-    void SetNume(const std::string &nume_) {
-        nume = nume_;
-    }
 
     void AdaugaAlbum(const Album &album);
 

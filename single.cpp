@@ -5,7 +5,7 @@
 #include "single.h"
 
 Single::Single(const std::string &nume_, const double durata_, const int vizualizari_, const Data& data_lansare_) : Piesa(nume_, durata_),
-    vizualizari(vizualizari_),data_lansare(data_lansare_) {};
+    vizualizari(vizualizari_),data_lansare(data_lansare_) {}
 
 void Single::AfisarePiesa(std::ostream &os) const {
     Piesa::AfisarePiesa(os);
@@ -17,6 +17,10 @@ int Single::GetVizualizari() const {
     return vizualizari;
 }
 
+const Data &Single::GetDataLansare() const {
+    return data_lansare;
+}
+
 std::ostream &operator<<(std::ostream &os, const Single &single) {
     single.AfisarePiesa(os);
     return os;
@@ -25,6 +29,7 @@ std::ostream &operator<<(std::ostream &os, const Single &single) {
 std::shared_ptr<Piesa> Single::clone() const {
     return std::make_shared<Single>(*this);
 }
+
 
 
 

@@ -17,6 +17,8 @@ public:
 
     bool operator < (const Data &other) const;
 
+    int getAn() const;
+
     bool operator == (const Data &other) const;
 
     ~Data() = default;
