@@ -15,7 +15,7 @@ public:
 
     void AfisarePiesa(std::ostream &os) const override;
 
-    [[maybe_unused]] const std::shared_ptr<Trupa>& getTrupaOriginala() const;
+    //[[maybe_unused]] const std::shared_ptr<Trupa>& getTrupaOriginala() const;
 
     [[nodiscard]] std::shared_ptr<Piesa> clone() const override;
 

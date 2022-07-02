@@ -16,7 +16,7 @@ class Album{
     double durata;
     int an_aparitie;
 public:
-    Album(std::vector<std::shared_ptr<Piesa>>& tracks_, const std::string &nume_ = "Nameless album", const double durata_ = 0,
+    explicit Album(std::vector<std::shared_ptr<Piesa>>& tracks_, const std::string &nume_ = "Nameless album", const double durata_ = 0,
                    const int an_aparitie_ = 0);
 
     Album (const Album& other);

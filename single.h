@@ -16,7 +16,7 @@ public:
 
     void AfisarePiesa(std::ostream &os) const override;
 
-    [[maybe_unused]]int GetVizualizari() const;
+    //[[maybe_unused]]int GetVizualizari() const;
 
     const Data& GetDataLansare() const;
 

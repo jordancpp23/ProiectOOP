@@ -12,9 +12,9 @@ void Cover::AfisarePiesa(std::ostream &os) const {
     Piesa::AfisarePiesa(os);
 }
 
-const std::shared_ptr<Trupa>& Cover::getTrupaOriginala() const {
+/*const std::shared_ptr<Trupa>& Cover::getTrupaOriginala() const {
     return trupa_originala;
-}
+}*/
 
 std::shared_ptr<Piesa> Cover::clone() const {
     return std::make_shared<Cover>(*this);

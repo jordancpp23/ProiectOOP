@@ -23,10 +23,7 @@ Album::Album(std::vector<std::shared_ptr<Piesa>> &tracks_, const std::string &nu
     }
 }
 
-Album::Album(const Album &other) {
-    nume = other.nume;
-    durata = other.durata;
-    an_aparitie = other.an_aparitie;
+Album::Album(const Album &other) : nume(other.nume), durata(other.durata), an_aparitie(other.an_aparitie) {
     for (const auto &piesa : other.tracks) {
         tracks.push_back(piesa->clone());
     }

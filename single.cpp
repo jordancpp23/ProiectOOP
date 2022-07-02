@@ -13,9 +13,9 @@ void Single::AfisarePiesa(std::ostream &os) const {
     os << "Data lansarii single-ului: " << data_lansare;
 }
 
-int Single::GetVizualizari() const {
+/*int Single::GetVizualizari() const {
     return vizualizari;
-}
+}*/
 
 const Data &Single::GetDataLansare() const {
     return data_lansare;
