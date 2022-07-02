@@ -29,6 +29,8 @@ public:
 
     double ScadeDurate(double x, double y);
 
+    void SortByRating();
+
     int getAnAparitie() const;
 
     bool VerificaPiesa(const Piesa &p) const;

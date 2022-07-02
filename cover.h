@@ -11,7 +11,15 @@
 class Cover : public Piesa{
     std::shared_ptr<Trupa> trupa_originala;
 public:
-    Cover(const std::string &nume, const double durata_, std::shared_ptr<Trupa>& trupa_originala_);
+    Cover(const std::string &nume_, const double durata_, const int radio_plays_, const int critic_rating_, std::shared_ptr<Trupa>& trupa_originala_);
+
+    Cover (const Cover& other);
+
+    friend void swap(Cover& c1, Cover& c2);
+
+    Cover& operator = (const Cover& other);
+
+    int CalcRating() const override;
 
     void AfisarePiesa(std::ostream &os) const override;
 

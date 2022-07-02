@@ -4,8 +4,9 @@
 
 #include "single.h"
 
-Single::Single(const std::string &nume_, const double durata_, const int vizualizari_, const Data& data_lansare_) : Piesa(nume_, durata_),
-    vizualizari(vizualizari_),data_lansare(data_lansare_) {}
+Single::Single(const std::string &nume_, const double durata_, const int radio_plays_,
+               const int critic_rating_, const int vizualizari_, const Data& data_lansare_) : Piesa(nume_, durata_, radio_plays_, critic_rating_),
+                                vizualizari(vizualizari_),data_lansare(data_lansare_) {}
 
 void Single::AfisarePiesa(std::ostream &os) const {
     Piesa::AfisarePiesa(os);
@@ -16,6 +17,10 @@ void Single::AfisarePiesa(std::ostream &os) const {
 /*int Single::GetVizualizari() const {
     return vizualizari;
 }*/
+
+int Single::CalcRating() const {
+    return std::min(100, (vizualizari/10000 + 25 * critic_rating + 55 * radio_plays)/2);
+}
 
 const Data &Single::GetDataLansare() const {
     return data_lansare;

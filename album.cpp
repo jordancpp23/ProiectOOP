@@ -5,6 +5,7 @@
 #include "album.h"
 #include "single.h"
 #include "exceptii.h"
+#include <algorithm>
 
 Album::Album(std::vector<std::shared_ptr<Piesa>> &tracks_, const std::string &nume_, const double durata_,
              const int an_aparitie_) : tracks(std::move(tracks_)), nume(nume_), durata(durata_), an_aparitie(an_aparitie_) {
@@ -68,6 +69,13 @@ double Album::ScadeDurate(double x, double y) {
     }
     else x -= y;
     return x;
+}
+
+void Album::SortByRating()
+{
+    std::sort(tracks.begin(), tracks.end(), [](const std::shared_ptr<Piesa> &p1, const std::shared_ptr<Piesa> &p2) {
+        return p1->CalcRating() < p2->CalcRating();
+    });
 }
 
 bool Album::VerificaPiesa(const Piesa &p) const {

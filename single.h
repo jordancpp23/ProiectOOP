@@ -11,7 +11,8 @@ class Single : public Piesa {
     int vizualizari;
     Data data_lansare;
 public:
-    Single(const std::string &nume_ = "Nameless song", const double durata_ = 0, const int vizualizari_ = 0,
+    Single(const std::string &nume_ = "Nameless song", const double durata_ = 0, const int radio_plays_ = 0,
+           const int critic_rating_ = 0, const int vizualizari_ = 0,
            const Data& data_lansare_ = Data(30, 02, 1900));
 
     void AfisarePiesa(std::ostream &os) const override;
@@ -20,6 +21,7 @@ public:
 
     const Data& GetDataLansare() const;
 
+    int CalcRating() const override;
 
     friend std::ostream& operator << (std::ostream &os, const Single &single);
 

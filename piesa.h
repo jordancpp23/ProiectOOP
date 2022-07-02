@@ -12,10 +12,14 @@ class Piesa{
 protected:
     std::string nume;
     double durata;
+    int radio_plays;
+    int critic_rating;
 public:
-    Piesa(const std::string &nume_ = "Nameless song", const double durata_ = 0);
+    Piesa(const std::string &nume_ = "Nameless song", const double durata_ = 0, const int radio_plays_ = 0, const int critic_rating_ = 0);
 
     virtual void AfisarePiesa(std::ostream &os) const;
+
+    virtual int CalcRating() const;
 
     friend std::istream& operator >> (std::istream &is, Piesa &p);
 

@@ -14,12 +14,12 @@
 int main() {
 
     Trupa t{"DiamondHead", "NWOBHM", 1976, {}, {}, {Artist{"BUTCHER", "voce", 50}}};
-    Single p1{"Master of Puppets", 7.19, 250'000, {12, 11, 1985}};
-    Piesa p2{"Disposable Heroes", 5.30};
+    Single p1{"Master of Puppets", 7.19, 2500, 88, 250'000, {12, 11, 1985}};
+    Piesa p2{"Disposable Heroes", 5.30, 4000, 75};
     Piesa p3{"Damage Inc.", 3.50};
     std::shared_ptr<Trupa> band_ptr = std::make_shared<Trupa>(t);
     auto ptr2 = band_ptr;
-    Cover p4{"Am I Evil?", 2.5, ptr2};
+    Cover p4{"Am I Evil?", 2.5, 6000, 66, ptr2};
     std::vector<std::shared_ptr<Piesa>> temp;
     temp = {std::make_shared<Single>(p1),
             std::make_shared<Piesa>(p2),
@@ -27,16 +27,16 @@ int main() {
             std::make_shared<Cover>(p4)};
 
     Album m1{temp, "Master of Puppets", 0, 1986};
-    Single p5{"The Thing That Should Not Be", 5.55, 125'000, {1, 1, 1986}};
+    Single p5{"The Thing That Should Not Be", 5.55, 10000, 59, 125'000, {1, 1, 1986}};
     m1.AdaugaPiesa(p5);
     m1.ScoatePiesa(p2);
-
+    m1.SortByRating();
     ///std::cout << m1;
     temp.clear();
-    temp.emplace_back(std::make_shared<Piesa>("Fight fire with fire", 4.05));
-    temp.emplace_back(std::make_shared<Single>("Creeping Death", 5.25, 600'000, Data{5, 3, 1984}));
+    temp.emplace_back(std::make_shared<Piesa>("Fight fire with fire", 4.05, 5000, 80));
+    temp.emplace_back(std::make_shared<Single>("Creeping Death", 5.25, 9000, 99, 600'000, Data{5, 3, 1984}));
     auto ptr3(band_ptr);
-    temp.emplace_back(std::make_shared<Cover>("Lightning to the Nations", 3.2, ptr3));
+    temp.emplace_back(std::make_shared<Cover>("Lightning to the Nations", 3.2, 5, 66, ptr3));
     Album m2{temp, "Ride the lightning", 0, 1984};
 
     std::set<Album> alb;
@@ -61,7 +61,7 @@ int main() {
     Piesa p6{"Take No Prisoners", 3.28};
     Piesa p7{"Hangar 18", 5.14};
     Piesa p8{"Five Magics", 5.41};
-    Single p9{"Holy Wars...The Punishment Due", 6.36, 1'000'000, Data{5, 10, 1990}};
+    Single p9{"Holy Wars...The Punishment Due", 6.36, 10000, 98, 1'000'000, Data{5, 10, 1990}};
     temp = {std::make_shared<Piesa>(p8),
             std::make_shared<Piesa>(p6),
             std::make_shared<Piesa>(p7),
@@ -80,7 +80,7 @@ int main() {
     if (t2.CautaPiesa(p1))
         std::cout << "Trupa a scris piesa!\n\n";
     else std::cout << "Wrong band / wrong song!\n\n";
-    Single p10{"Hell Awaits", 6.05, 5, Data{5, 2, 1949}};
+    Single p10{"Hell Awaits", 6.05, 5, 12, 5,  Data{5, 2, 1949}};
     try {
         std::shared_ptr<Piesa> hptr = std::make_shared<Single>(p10);
         temp.clear();
