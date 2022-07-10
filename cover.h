@@ -11,7 +11,7 @@
 class Cover : public Piesa{
     std::shared_ptr<Trupa> trupa_originala;
 public:
-    Cover(const std::string &nume_, const double durata_, const int radio_plays_, const int critic_rating_, std::shared_ptr<Trupa>& trupa_originala_);
+    Cover(const std::string &nume_, const double durata_, const int radio_plays_, const int critic_rating_, const Trupa& trupa_originala_);
 
     Cover (const Cover& other);
 

@@ -51,7 +51,12 @@ public:
 
     friend std::ostream& operator<< (std::ostream &os, const Trupa& band);
 
-    ~Trupa() = default;
+    virtual std::shared_ptr<Trupa> clone() const
+    {
+        return std::make_shared<Trupa>(*this);
+    }
+
+    virtual ~Trupa() = default;
 };
 
 

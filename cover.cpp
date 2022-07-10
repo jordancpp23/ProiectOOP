@@ -5,12 +5,9 @@
 #include "cover.h"
 
 Cover::Cover(const std::string &nume_, const double durata_, const int radio_plays_, const int critic_rating_,
-             std::shared_ptr<Trupa>& trupa_originala_) : Piesa(nume_, durata_, radio_plays_, critic_rating_),
-                                                                                     trupa_originala(std::move(trupa_originala_)) {}
-Cover::Cover(const Cover &other) : Piesa(other) {
-    auto ptr{other.trupa_originala};
-    trupa_originala = std::move(ptr);
-}
+             const Trupa& trupa_originala_) : Piesa(nume_, durata_, radio_plays_, critic_rating_),
+                                                                                     trupa_originala(trupa_originala_.clone()) {}
+Cover::Cover(const Cover &other) : Piesa(other), trupa_originala(other.trupa_originala->clone()) {}
 
 void swap(Cover &c1, Cover &c2) {
     using std::swap;

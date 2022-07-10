@@ -17,9 +17,7 @@ int main() {
     Single p1{"Master of Puppets", 7.19, 2500, 88, 250'000, {12, 11, 1985}};
     Piesa p2{"Disposable Heroes", 5.30, 4000, 75};
     Piesa p3{"Damage Inc.", 3.50};
-    std::shared_ptr<Trupa> band_ptr = std::make_shared<Trupa>(t);
-    auto ptr2 = band_ptr;
-    Cover p4{"Am I Evil?", 2.5, 6000, 66, ptr2};
+    Cover p4{"Am I Evil?", 2.5, 6000, 66, t};
     std::vector<std::shared_ptr<Piesa>> temp;
     temp = {std::make_shared<Single>(p1),
             std::make_shared<Piesa>(p2),
@@ -35,8 +33,7 @@ int main() {
     temp.clear();
     temp.emplace_back(std::make_shared<Piesa>("Fight fire with fire", 4.05, 5000, 80));
     temp.emplace_back(std::make_shared<Single>("Creeping Death", 5.25, 9000, 99, 600'000, Data{5, 3, 1984}));
-    auto ptr3(band_ptr);
-    temp.emplace_back(std::make_shared<Cover>("Lightning to the Nations", 3.2, 5, 66, ptr3));
+    temp.emplace_back(std::make_shared<Cover>("Lightning to the Nations", 3.2, 5, 66, t));
     Album m2{temp, "Ride the lightning", 0, 1984};
 
     std::set<Album> alb;
